@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myapp">
+<head>
+    <meta charset="UTF-8">
+    <title>ToDoApp</title>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="todo.css"/>
+    <style>
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<script>
+    var app=angular.module("myapp",[]);
+    app.controller("mycontroller",['$scope',function($scope){
+        $scope.todos=[];
+        $scope.todo;
+
+        $scope.add=function(){
+            $scope.todos.push({text:$scope.todo,completed:false});
+            $scope.todo="";
+        }
+
+        $scope.remaining=function(){
+            var count=0;
+            if($scope.todos.length!=0) {
+                angular.forEach($scope.todos, function (todo) {
+                   count+= todo.completed ? 0:1;
+                });
+            }
+            return count;
+        }
+
+        $scope.deletetodos=function(){
+            if($scope.todos.length!=0) {
+                angular.forEach($scope.todos, function (todo) {
+                    if(todo.completed){
+                        $scope.todos.splice($scope.todos.indexOf(todo),1)
+                    }
+                });
+            }
+        }
+
+        $scope.checkAll=function(){
+            if($scope.todos.length!=0) {
+                angular.forEach($scope.todos, function (todo) {
+                  todo.completed=true;
+                });
+            }
+        }
+
+        $scope.UncheckAll=function(){
+            if($scope.todos.length!=0) {
+                angular.forEach($scope.todos, function (todo) {
+                    todo.completed=false;
+                });
+            }
+        }
+
+    }]);
+</script>
+<body ng-controller="mycontroller">
+    <div class="row">
+        <div class="col-lg-4">
+            <h1>ToDO List App</h1>
+            <form name="form" novalidate>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="todo" ng-model="todo" required>
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" ng-disabled="form.$invalid" ng-click="add()">Add</button>
+                    </span>
+
+                </div>
+                <div ng-show="form.todo.$invalid && !form.todo.$pristine">
+                    <div ng-message="required">This field is required</div>
+                </div>
+            </form>
+            <br>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">You have {{remaining()}}/{{todos.length}} todos</h3>
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li ng-repeat="todo in todos"><input type="checkbox" class="checkBoxClass" ng-model="todo.completed" />&nbsp;<span ng-class="{'completed_class':todo.completed}">{{todo.text}}</span></li>
+                    </ul>
+                </div>
+                <div class="panel-footer">
+                    <a ng-click="deletetodos()">Clear completed</a>&nbsp;
+                    <a ng-click="checkAll()">Check All</a>&nbsp;
+                    <a ng-click="UncheckAll()">Uncheck All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

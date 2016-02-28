@@ -1,0 +1,13 @@
+li{
+    list-style-type: none;
+}
+
+ul{
+    padding-left: 0;
+}
+
+.completed_class
+{
+    text-decoration: line-through;
+
+}
